@@ -30,10 +30,40 @@ const FormFields = (props) => {
 
   const changeHandler = (event, id) => {
     const newState = props.formData;
-
     newState[id].value = event.target.value;
 
+    let validData = validate(newState[id])
+    newState[id].valid = validData[0];
+    newState[id].validationMessage = validData[1];
+
     props.change(newState)
+  }
+
+  const validate = (element) => {
+    console.log(element)
+
+    let error = [true, '']
+
+    if (element.validation.required) {
+      const valid = element.value.trim() !== '';
+      const message = `${!valid ? 'This field is required' : ''}`
+
+      error = !valid ? [valid, message] : error
+    }
+    return error;
+  }
+
+  const showValidation = (data) => {
+    let errorMassage = null;
+
+    if (data.validation && !data.valid) {
+      errorMassage = (
+        <div className='label_error'>
+          {data.validationMessage}
+        </div>
+      )
+    }
+    return errorMassage;
   }
 
   const renderTemplates = (data) => {
@@ -52,6 +82,41 @@ const FormFields = (props) => {
                 (event) => changeHandler(event, data.id)
               }
             />
+            {showValidation(values)}
+          </div>
+        )
+        break;
+      case('textarea'):
+        formTemplate = (
+          <div>
+            {showLabel(values.label, values.labelText)}
+            <textarea
+              {...values.config}
+              value={values.value}
+              onChange={
+                (event) => changeHandler(event, data.id)
+              }
+            />
+          </div>
+        )
+        break;
+      case('select'):
+        formTemplate = (
+          <div>
+            {showLabel(values.label, values.labelText)}
+            <select
+              value={values.value}
+              name={values.config.name}
+              onChange={
+                (event) => changeHandler(event, data.id)
+              }
+            >
+              {values.config.options.map((item, i) => (
+                <option key={i} value={item.val}>
+                  {item.text}
+                </option>
+              ))}
+            </select>
           </div>
         )
         break;
