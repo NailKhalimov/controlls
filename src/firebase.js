@@ -11,4 +11,12 @@ const config = {
 
 firebase.initializeApp(config);
 
-firebase.database().ref().set('it works')
+const firebaseDB = firebase.database();
+
+firebaseDB.ref('eyes').set('green')
+  .then(() => {
+    console.log('data saved')
+  })
+  .catch((e) => {
+    console.log(e)
+  })
