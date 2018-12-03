@@ -12,11 +12,15 @@ const config = {
 firebase.initializeApp(config);
 
 const firebaseDB = firebase.database();
+const googleAuth = new firebase.auth.GoogleAuthProvider();
 
-firebaseDB.ref('eyes').set('green')
-  .then(() => {
-    console.log('data saved')
-  })
-  .catch((e) => {
-    console.log(e)
-  })
+export {
+  firebase,
+  firebaseDB,
+  googleAuth
+}
+
+// firebaseDB.ref('users').orderByChild('lastname').equalTo('Ball').once('value')
+//   .then((snapshot) => {
+//     console.log(snapshot.val())
+//   })
